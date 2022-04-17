@@ -79,6 +79,9 @@ dependencies {
     kapt(Dependencies.App.lifecycleCompiler)
     implementation(Dependencies.App.lifecycleViewModel)
 
+    // view pump
+    implementation(Dependencies.App.viewPump)
+
     //  progressBar
     implementation(Dependencies.App.materialProgressBar)
 
