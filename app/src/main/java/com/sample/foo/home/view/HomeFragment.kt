@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupViews() {
-
+        binding.sellEditText.requestFocus()
     }
 
     private fun observeViewModel(){
