@@ -1,6 +1,335 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/headerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_background_vertical"
+        android:text="@string/currency_converter"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:padding="16dp"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/balanceHeaderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/capitalize_my_balances"
+        android:textSize="14sp"
+        android:textColor="@color/text_header_gray"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/headerTextView"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/balanceRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintTop_toBottomOf="@id/balanceHeaderTextView"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/currencyExchangeHeaderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/capitalize_currency_exchange"
+        android:textSize="14sp"
+        android:textColor="@color/text_header_gray"
+        android:layout_marginTop="48dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@id/balanceRecyclerView"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sellCurrencyContainer"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/currencyExchangeHeaderTextView">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/sellIconCardView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardBackgroundColor="@color/sell_icon_background"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="360dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sellIconImageView"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:tint="@color/white"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_arrow_down_svg"
+                android:scaleY="-1"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sellLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text_dark"
+            android:text="@string/sell_title"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/sellIconCardView"
+            app:layout_constraintEnd_toStartOf="@id/sellEditText"/>
+        
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/sellEditText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="16sp"
+            android:textColor="@color/text_dark"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            tools:text="100.00"
+            android:textStyle="bold"
+            android:textAlignment="textEnd"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/sellLabelTextView"
+            app:layout_constraintEnd_toStartOf="@id/sellCurrencySpinnerContainer"/>
+        
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sellCurrencySpinnerContainer"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sellCurrencyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="EUR"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:textSize="16sp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/sellCurrencyArrow"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sellCurrencyArrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:scaleType="fitXY"
+                android:scaleY="1.2"
+                android:scaleX="1.2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_spinner_arrow_down_svg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/sellCurrencyTextView"/>
+            
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:visibility="invisible"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/sellHorizontalSeparator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="64dp"
+            android:background="@color/line_separator_background"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buyCurrencyContainer"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:layout_constraintTop_toBottomOf="@id/sellCurrencyContainer">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/buyIconCardView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardBackgroundColor="@color/buy_icon_background"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="360dp"
+            android:layout_marginStart="16dp"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/buyIconImageView"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:tint="@color/white"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_arrow_down_svg"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/buyLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text_dark"
+            android:text="@string/receive_title"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/buyIconCardView"
+            app:layout_constraintEnd_toStartOf="@id/buyTextView"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/buyTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text_green"
+            tools:text="+110.30"
+            android:textStyle="bold"
+            android:gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/buyLabelTextView"
+            app:layout_constraintEnd_toStartOf="@id/buyCurrencySpinnerContainer"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buyCurrencySpinnerContainer"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/buyCurrencyTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="USD"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/buyCurrencyArrow"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/buyCurrencyArrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:scaleType="fitXY"
+                android:scaleY="1.2"
+                android:scaleX="1.2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_spinner_arrow_down_svg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/buyCurrencyTextView"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:visibility="invisible"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/buyHorizontalSeparator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="64dp"
+            android:background="@color/line_separator_background"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/submitCardView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="2dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="48dp"
+        app:layout_constraintStart_toStartOf="@id/guideline10PercentVertical"
+        app:layout_constraintEnd_toEndOf="@id/guideline90PercentVertical"
+        app:layout_constraintTop_toBottomOf="@id/buyCurrencyContainer">
+
+        <FrameLayout
+            android:id="@+id/submitContentFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_background">
+
+            <TextView
+                android:id="@+id/submitTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/submit"
+                android:textColor="@color/text_light"
+                android:textSize="16sp"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline90PercentVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10PercentVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

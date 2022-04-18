@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Foo</string>
     <string name="try_again">Try again</string>
+    <string name="currency_converter">Currency Converter</string>
+    <string name="capitalize_my_balances">MY BALANCES</string>
+    <string name="capitalize_currency_exchange">CURRENCY EXCHANGE</string>
+    <string name="submit">SUBMIT</string>
+    <string name="sell_title">Sell</string>
+    <string name="receive_title">Receive</string>
 </resources>

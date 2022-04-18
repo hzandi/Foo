@@ -5,4 +5,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="text_header_gray">#939da7</color>
+    <color name="line_separator_background">#f3f4f6</color>
+    <color name="text_light">#e6f3f9</color>
+    <color name="sell_icon_background">#f34e4f</color>
+    <color name="buy_icon_background">#4caf50</color>
+    <color name="text_dark">#333333</color>
+    <color name="text_green">#78b66e</color>
 </resources>

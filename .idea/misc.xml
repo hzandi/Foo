@@ -4,10 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/gradient_background.xml" value="0.1595" />
+        <entry key="app/src/main/res/drawable/gradient_background_vertical.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1595" />
+        <entry key="app/src/main/res/drawable/ic_spinner_arrow_down_svg.xml" value="0.128" />
         <entry key="app/src/main/res/drawable/splash.xml" value="0.1595" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.28229166666666666" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
       </map>
     </option>
   </component>
