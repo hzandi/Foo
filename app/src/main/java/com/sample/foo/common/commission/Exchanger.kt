@@ -34,7 +34,7 @@ interface ExchangeRule {
     fun change(exchangeRequestModel: ExchangeRequestModel): ExchangeResultModel?
 }
 
-// calc result with fixed 0.07 % fee
+// calc result with fixed 0.7% fee
 class ExchangeWithFixedFee @Inject constructor() : ExchangeRule {
 
     companion object {
@@ -56,7 +56,7 @@ class ExchangeWithFixedFee @Inject constructor() : ExchangeRule {
     }
 }
 
-// calc result with fixed 0.07 % fee from n free exchange
+// calc result with fixed 0.7% fee from n free exchange
 class ExchangeWithFixedFeeAfterNFree @Inject constructor(
     private val localStorage: LocalStorage
 ) : ExchangeRule {
@@ -88,7 +88,7 @@ class ExchangeWithFixedFeeAfterNFree @Inject constructor(
     }
 }
 
-// calc result with fixed 0.07 % fee with every n free exchange
+// calc result with fixed 0.7 % fee with every n free exchange
 class ExchangeWithEveryNthFree @Inject constructor(
     private val localStorage: LocalStorage
 ) : ExchangeRule {
@@ -119,7 +119,7 @@ class ExchangeWithEveryNthFree @Inject constructor(
     }
 }
 
-// calc result with fixed 0.07 % fee with up to n price free conversion
+// calc result with fixed 0.7 % fee with up to n price free conversion
 class ExchangeWithFixedFeeUpToNPriceFree @Inject constructor(
     val localStorage: LocalStorage
 ) : ExchangeRule {
