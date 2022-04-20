@@ -7,4 +7,5 @@
     <string name="submit">SUBMIT</string>
     <string name="sell_title">Sell</string>
     <string name="receive_title">Receive</string>
+    <string name="zero_currency">0.00</string>
 </resources>
