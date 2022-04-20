@@ -51,7 +51,7 @@ dependencies {
     implementation(Dependencies.Common.inject)
     implementation(Dependencies.Common.timber)
     implementation(Dependencies.Common.appCompat)
-    implementation(Dependencies.App.coreKtx)
+    implementation(Dependencies.Common.coreKtx)
 
     // Navigation
     implementation(Dependencies.App.navigationFragment)
@@ -70,6 +70,11 @@ dependencies {
     implementation(Dependencies.App.hilt)
     kapt(Dependencies.App.hiltAndroidCompiler)
 
+    // room
+    implementation(Dependencies.Data.room)
+    kapt(Dependencies.Data.roomCompiler)
+    implementation(Dependencies.Data.roomKtx)
+
     // Dagger Hilt ViewModel extension
     implementation(Dependencies.App.hiltViewModel)
     kapt(Dependencies.App.hiltCompiler)
@@ -85,15 +90,8 @@ dependencies {
     //  progressBar
     implementation(Dependencies.App.materialProgressBar)
 
-    // Set of extra Transitions on top of AndroidX Transitions Library
-    implementation(Dependencies.App.transitionsEverywhere)
-
-    // blur view
-    implementation(Dependencies.App.blurry)
-
-    // coil image loader
-    implementation(Dependencies.App.coil)
-    implementation(Dependencies.App.coilGif)
+    // retrofit
+    implementation(Dependencies.Data.retrofit)
 
     // Test
     testImplementation(Dependencies.CommonTest.junit)

@@ -1,6 +1,7 @@
 object Dependencies {
 
     object Common {
+        const val coreKtx = "androidx.core:core-ktx:1.7.0"
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlinVersion}"
         const val inject = "javax.inject:javax.inject:1"
         const val timber = "com.jakewharton.timber:timber:5.0.1"
@@ -34,7 +35,6 @@ object Dependencies {
     }
 
     object App {
-        const val coreKtx = "androidx.core:core-ktx:1.7.0"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.3"
         const val preference = "androidx.preference:preference-ktx:1.2.0"
         const val navigationFragment =
@@ -71,6 +71,10 @@ object Dependencies {
             "com.squareup.retrofit2:converter-scalars:${Versions.retrofitVersion}"
         const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.3"
         const val gson = "com.google.code.gson:gson:${Versions.gsonVersion}"
+        const val room = "androidx.room:room-runtime:${Versions.roomVersion}"
+        const val roomCompiler = "androidx.room:room-compiler:${Versions.roomVersion}"
+        // optional - Kotlin Extensions and Coroutines support for Room
+        const val roomKtx = "androidx.room:room-ktx:${Versions.roomVersion}"
     }
 
     object ScrCast {

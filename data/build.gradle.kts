@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     id("kotlin-parcelize")
+    kotlin("kapt")
 }
 
 android {
@@ -38,11 +39,15 @@ dependencies {
     implementation(Dependencies.Common.timber)
     implementation(Dependencies.Common.coroutinesCore)
     implementation(Dependencies.Common.coroutinesAndroid)
+    implementation(Dependencies.Common.coreKtx)
     implementation(Dependencies.Data.retrofit)
     implementation(Dependencies.Data.retrofitJsonConverter)
     implementation(Dependencies.Data.retrofitScalarsConverter)
     implementation(Dependencies.Data.okhttpLoggingInterceptor)
     implementation(Dependencies.Data.gson)
+    implementation(Dependencies.Data.room)
+    kapt(Dependencies.Data.roomCompiler)
+    implementation(Dependencies.Data.roomKtx)
 
     // Test
     testImplementation(Dependencies.CommonTest.junit)

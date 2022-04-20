@@ -1,7 +1,7 @@
 package com.sample.foo
 
 import android.app.Application
-import com.sample.data.LocalStorage
+import com.sample.data.pref.LocalStorage
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 import javax.inject.Inject
