@@ -76,12 +76,12 @@ class HomeFragment : Fragment(), CoroutineScope {
 
         homeViewModel.getLatestExchangeRates()
 
-//        // start currency rate syncer
-//        durationTracker.setTaskWithInterval(object : DurationTracker.OnTaskEvent {
-//            override fun execute() {
-//                homeViewModel.syncLatestExchangeRates()
-//            }
-//        }, 5).startTimer()
+        // start currency rate syncer
+        durationTracker.setTaskWithInterval(object : DurationTracker.OnTaskEvent {
+            override fun execute() {
+                homeViewModel.syncLatestExchangeRates()
+            }
+        }, 5).startTimer()
     }
 
     private fun setupViews() {
