@@ -1,7 +1,7 @@
 package com.sample.data.api
 
 import com.sample.data.BuildConfig
-import com.sample.data.LocalStorage
+import com.sample.data.pref.LocalStorage
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
