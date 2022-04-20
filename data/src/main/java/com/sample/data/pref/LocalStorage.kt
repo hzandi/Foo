@@ -42,4 +42,19 @@ class LocalStorage
 
     fun getDouble(key: String): Double? = sharedPreferences.getString(key, null)?.toDouble()
 
+    fun putInt(key: String, value: Int) {
+        sharedPreferences.edit()
+            .putInt(key, value)
+            .apply()
+    }
+
+    fun getInt(key: String): Int? {
+        val value = sharedPreferences.getInt(key, -1)
+        return if(value == -1){
+            null
+        }else {
+            value
+        }
+    }
+
 }
