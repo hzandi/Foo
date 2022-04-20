@@ -1,13 +1,19 @@
 package com.sample.foo.home.view
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -79,8 +85,15 @@ class HomeFragment : Fragment(), CoroutineScope {
     }
 
     private fun setupViews() {
+
+        // sell editView
         binding.sellEditText.requestFocus()
         binding.sellEditText.addTextChangedListener(debounceWatcher)
+
+        // submit
+        binding.submitCardView.setOnClickListener {
+            callExchange()
+        }
     }
 
     private fun observeViewModel() {
@@ -102,12 +115,23 @@ class HomeFragment : Fragment(), CoroutineScope {
                 }
             }
 
-        homeViewModel.exchangeLiveData
+        homeViewModel.exchangePreviewLiveData
             .observe(viewLifecycleOwner) { viewState: ViewState<ExchangeResultModel> ->
                 sequenceOf(
                     when (viewState) {
                         is ViewState.DataLoadedState -> handleExchangePreviewState(viewState)
                         is ViewState.ErrorState -> handleExchangePreviewErrorState(viewState)
+                        else -> {}
+                    }
+                )
+            }
+
+        homeViewModel.exchangeLiveData
+            .observe(viewLifecycleOwner) { viewState: ViewState<ExchangeResultModel> ->
+                sequenceOf(
+                    when (viewState) {
+                        is ViewState.DataLoadedState -> handleExchangeState(viewState)
+                        is ViewState.ErrorState -> handleExchangeErrorState(viewState)
                         else -> {}
                     }
                 )
@@ -162,12 +186,30 @@ class HomeFragment : Fragment(), CoroutineScope {
         binding.buyTextView.text = resultValue
     }
 
+    private fun handleExchangeState(viewState: ViewState.DataLoadedState<ExchangeResultModel>) {
+        //ex message: You have converted 100.00 EUR to 110.00 USD. Commission Fee - 0.70 EUR.
+        binding.sellEditText.text?.let {
+            if(it.isNotEmpty()) {
+                val message = "You have converted " + it.toString() + " " + viewState.data.sellSymbol +
+                        " to " + viewState.data.result.toString() + " " + viewState.data.buySymbol + "." +
+                        "Commission Fee - " + viewState.data.fee + " " + viewState.data.sellSymbol + "."
+                showDialog(message)
+            }
+        }
+        binding.sellEditText.setText("")
+        binding.buyTextView.text = ""
+    }
+
     private fun handleErrorState(viewState: ViewState.ErrorState<LatestExRateEntity>) {
         showSnackbar(viewState.errorMessage)
     }
 
     private fun handleExchangePreviewErrorState(viewState: ViewState.ErrorState<ExchangeResultModel>) {
         binding.buyTextView.text = viewState.errorMessage
+    }
+
+    private fun handleExchangeErrorState(viewState: ViewState.ErrorState<ExchangeResultModel>) {
+        showDialog(viewState.errorMessage)
     }
 
     private fun showSnackbar(message: String) {
@@ -260,7 +302,7 @@ class HomeFragment : Fragment(), CoroutineScope {
                     binding.buyCurrencyTextView.text = buyCurrencies[position]
                     binding.sellEditText.text?.let {
                         if (it.isNotEmpty()) {
-                            callExchange()
+                            callPreviewExchange()
                         }
                     }
                 }
@@ -301,7 +343,7 @@ class HomeFragment : Fragment(), CoroutineScope {
                     return@launch
 
                 // call exchange
-                callExchange()
+                callPreviewExchange()
             }
         }
 
@@ -324,6 +366,38 @@ class HomeFragment : Fragment(), CoroutineScope {
             )
             homeViewModel.exchange(exchangeRequestModel)
         }
+    }
+
+    private fun callPreviewExchange() {
+        binding.sellEditText.text?.toString()?.let { sellValue ->
+            if(sellValue.isEmpty()) {
+                binding.buyTextView.text = ""
+                return
+            }
+            val exchangeRequestModel = ExchangeRequestModel(
+                sellValue.toDouble(),
+                null,
+                CommissionType.FIXED_FEE,
+                binding.sellCurrencyTextView.text.toString(),
+                binding.buyCurrencyTextView.text.toString()
+            )
+            homeViewModel.getExchangePreview(exchangeRequestModel)
+        }
+    }
+
+    private fun showDialog(title: String) {
+        val dialog = Dialog(requireActivity())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.alert_dialog_layout)
+        val body = dialog.findViewById(R.id.bodyTextView) as TextView
+        body.text = title
+        val okCardView = dialog.findViewById(R.id.okButton) as Button
+        okCardView.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
     }
 
     override fun onDestroyView() {

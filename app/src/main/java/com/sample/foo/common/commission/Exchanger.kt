@@ -43,9 +43,10 @@ class ExchangeWithFixedFee @Inject constructor() : ExchangeRule {
 
     override fun change(exchangeRequestModel: ExchangeRequestModel): ExchangeResultModel? {
         exchangeRequestModel.exchangeRate?.let { exchangeRate ->
-            val fee = exchangeRequestModel.value * FEE_PERCENT
+            var fee = exchangeRequestModel.value * FEE_PERCENT
             var result = (exchangeRequestModel.value - fee) * exchangeRate
             result = (result * 100.0).roundToInt() / 100.0
+            fee = (fee * 100.0).roundToInt() / 100.0
             return ExchangeResultModel(
                 result, fee,
                 exchangeRequestModel.sellSymbol,
@@ -77,6 +78,7 @@ class ExchangeWithFixedFeeAfterNFree @Inject constructor(
             }
             var result = (exchangeRequestModel.value - fee) * exchangeRate
             result = (result * 100.0).roundToInt() / 100.0
+            fee = (fee * 100.0).roundToInt() / 100.0
             return ExchangeResultModel(
                 result, fee,
                 exchangeRequestModel.sellSymbol,
@@ -107,6 +109,7 @@ class ExchangeWithEveryNthFree @Inject constructor(
             localStorage.putInt(KEY, n + 1)
             var result = (exchangeRequestModel.value - fee) * exchangeRate
             result = (result * 100.0).roundToInt() / 100.0
+            fee = (fee * 100.0).roundToInt() / 100.0
             return ExchangeResultModel(
                 result, fee,
                 exchangeRequestModel.sellSymbol,
@@ -134,6 +137,7 @@ class ExchangeWithFixedFeeUpToNPriceFree @Inject constructor(
             }
             var result = (exchangeRequestModel.value - fee) * exchangeRate
             result = (result * 100.0).roundToInt() / 100.0
+            fee = (fee * 100.0).roundToInt() / 100.0
             return ExchangeResultModel(
                 result, fee,
                 exchangeRequestModel.sellSymbol,

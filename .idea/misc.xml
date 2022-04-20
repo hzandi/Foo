@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/ic_spinner_arrow_down_svg.xml" value="0.128" />
         <entry key="app/src/main/res/drawable/splash.xml" value="0.1595" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/alert_dialog_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/balance_item_layut.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="app/src/main/res/layout/spinner_item_layout.xml" value="0.231722958529286" />

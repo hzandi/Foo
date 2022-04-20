@@ -16,6 +16,7 @@ import com.sample.foo.common.commission.model.ExchangeRequestModel
 import com.sample.foo.common.commission.model.ExchangeResultModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,6 +39,8 @@ class HomeViewModel @Inject constructor(
     private var balances = ArrayList<BalanceEntity>()
     private var _balancesMutableLiveData = MutableLiveData<ViewState<List<BalanceEntity>>>()
     val balancesLiveData: LiveData<ViewState<List<BalanceEntity>>> = _balancesMutableLiveData
+    private var _exchangePreviewMutableLiveData = MutableLiveData<ViewState<ExchangeResultModel>>()
+    val exchangePreviewLiveData: LiveData<ViewState<ExchangeResultModel>> = _exchangePreviewMutableLiveData
     private var _exchangeMutableLiveData = MutableLiveData<ViewState<ExchangeResultModel>>()
     val exchangeLiveData: LiveData<ViewState<ExchangeResultModel>> = _exchangeMutableLiveData
 
@@ -86,8 +89,34 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun exchange(exchangeRequestModel: ExchangeRequestModel){
+    fun getExchangePreview(exchangeRequestModel: ExchangeRequestModel){
 
+        viewModelScope.launch {
+
+            // handle empty or wrong sell values
+            getLocalBalances()
+            for(balance in balances){
+                if(balance.symbol == exchangeRequestModel.sellSymbol){
+                    if(exchangeRequestModel.value <= 0 ||
+                        exchangeRequestModel.value > balance.value ?: 0.0) {
+                        _exchangePreviewMutableLiveData.value = ViewState.ErrorState("Wrong Sell Value!")
+                        return@launch
+                    }
+                }
+            }
+
+            // exchange preview
+            val latestExRateEntity = localLatestExRatesRepository.getLatestExchangeRates()
+            latestExRateEntity?.rates?.let { exchangeRates ->
+                exchangeRequestModel.exchangeRate = exchangeRates[exchangeRequestModel.buySymbol]
+            }
+            exchanger.change(exchangeRequestModel)?.let {
+                _exchangePreviewMutableLiveData.value = ViewState.success(it)
+            }
+        }
+    }
+
+    fun exchange(exchangeRequestModel: ExchangeRequestModel) {
         viewModelScope.launch {
 
             // handle empty or wrong sell values
@@ -102,18 +131,40 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            // exchange preview
+            // exchange
             val latestExRateEntity = localLatestExRatesRepository.getLatestExchangeRates()
             latestExRateEntity?.rates?.let { exchangeRates ->
                 exchangeRequestModel.exchangeRate = exchangeRates[exchangeRequestModel.buySymbol]
             }
+            var exchangeResultModel: ExchangeResultModel? = null
             exchanger.change(exchangeRequestModel)?.let {
+                exchangeResultModel = it
                 _exchangeMutableLiveData.value = ViewState.success(it)
             }
+
+            // update sell and buy balances
+            for(balance in balances){
+                if(balance.symbol == exchangeRequestModel.sellSymbol){
+                    balance.value?.let {
+                        balance.value = it - exchangeRequestModel.value
+                        updateLocalBalances(balance)
+                    }
+                }
+                if(balance.symbol == exchangeRequestModel.buySymbol){
+                    balance.value?.let { balanceValue ->
+                        exchangeResultModel?.result?.let { resultValue ->
+                            balance.value = balanceValue + resultValue
+                            updateLocalBalances(balance)
+                        }
+                    }
+                }
+            }
+            delay(500)
+            getLocalBalances()
         }
     }
 
-    fun saveLatestExRates(latestExRateEntity: LatestExRateEntity?) {
+    private fun saveLatestExRates(latestExRateEntity: LatestExRateEntity?) {
         viewModelScope.launch(Dispatchers.IO) {
             latestExRateEntity?.let {
                 localLatestExRatesRepository.deleteLatestExchangeRates()
@@ -146,7 +197,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateLocalBalances(balanceEntity: BalanceEntity) {
+    private fun updateLocalBalances(balanceEntity: BalanceEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             localBalanceRepository.insertOrUpdateBalance(balanceEntity)
         }
