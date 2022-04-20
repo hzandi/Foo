@@ -1,5 +1,5 @@
-## Foo ##
-Currency Exchanger Sample
+## Foo ###
+**Currency Exchanger Sample**
 
 
 ## brief description ##
