@@ -1,6 +1,8 @@
 package com.sample.foo.home.view
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,19 +20,28 @@ import com.sample.data.entity.LatestExRateEntity
 import com.sample.foo.R
 import com.sample.foo.common.DurationTracker
 import com.sample.foo.common.ViewState
+import com.sample.foo.common.commission.CommissionType
+import com.sample.foo.common.commission.model.ExchangeRequestModel
+import com.sample.foo.common.commission.model.ExchangeResultModel
 import com.sample.foo.databinding.FragmentHomeBinding
 import com.sample.foo.home.view.adapter.BalanceAdapter
 import com.sample.foo.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), CoroutineScope {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var snackbar: Snackbar
+    override val coroutineContext: CoroutineContext = Dispatchers.Main
 
     @Inject
     lateinit var durationTracker: DurationTracker
@@ -69,6 +80,7 @@ class HomeFragment : Fragment() {
 
     private fun setupViews() {
         binding.sellEditText.requestFocus()
+        binding.sellEditText.addTextChangedListener(debounceWatcher)
     }
 
     private fun observeViewModel() {
@@ -88,6 +100,17 @@ class HomeFragment : Fragment() {
                     is ViewState.DataLoadedState -> handleBalanceLoadedState(viewState)
                     else -> {}
                 }
+            }
+
+        homeViewModel.exchangeLiveData
+            .observe(viewLifecycleOwner) { viewState: ViewState<ExchangeResultModel> ->
+                sequenceOf(
+                    when (viewState) {
+                        is ViewState.DataLoadedState -> handleExchangePreviewState(viewState)
+                        is ViewState.ErrorState -> handleExchangePreviewErrorState(viewState)
+                        else -> {}
+                    }
+                )
             }
     }
 
@@ -134,8 +157,17 @@ class HomeFragment : Fragment() {
 
     }
 
+    private fun handleExchangePreviewState(viewState: ViewState.DataLoadedState<ExchangeResultModel>) {
+        val resultValue = "+" + viewState.data.result.toString()
+        binding.buyTextView.text = resultValue
+    }
+
     private fun handleErrorState(viewState: ViewState.ErrorState<LatestExRateEntity>) {
         showSnackbar(viewState.errorMessage)
+    }
+
+    private fun handleExchangePreviewErrorState(viewState: ViewState.ErrorState<ExchangeResultModel>) {
+        binding.buyTextView.text = viewState.errorMessage
     }
 
     private fun showSnackbar(message: String) {
@@ -226,6 +258,11 @@ class HomeFragment : Fragment() {
                     id: Long
                 ) {
                     binding.buyCurrencyTextView.text = buyCurrencies[position]
+                    binding.sellEditText.text?.let {
+                        if (it.isNotEmpty()) {
+                            callExchange()
+                        }
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -245,6 +282,47 @@ class HomeFragment : Fragment() {
         override fun handleOnBackPressed() {
             binding.progressBar.isGone = true
             binding.contentConstraintLayout.isVisible = true
+        }
+    }
+
+    // debounce editText watcher
+    private val debounceWatcher = object : TextWatcher {
+        private var searchFor = ""
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            val searchText = s.toString().trim()
+            if (searchText == searchFor)
+                return
+
+            searchFor = searchText
+            launch {
+                delay(500)  //debounce timeOut
+                if (searchText != searchFor)
+                    return@launch
+
+                // call exchange
+                callExchange()
+            }
+        }
+
+        override fun afterTextChanged(s: Editable?) = Unit
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+    }
+
+    private fun callExchange() {
+        binding.sellEditText.text?.toString()?.let { sellValue ->
+            if(sellValue.isEmpty()) {
+                binding.buyTextView.text = ""
+                return
+            }
+            val exchangeRequestModel = ExchangeRequestModel(
+                sellValue.toDouble(),
+                null,
+                CommissionType.FIXED_FEE,
+                binding.sellCurrencyTextView.text.toString(),
+                binding.buyCurrencyTextView.text.toString()
+            )
+            homeViewModel.exchange(exchangeRequestModel)
         }
     }
 
