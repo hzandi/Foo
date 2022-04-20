@@ -38,7 +38,7 @@ interface ExchangeRule {
 class ExchangeWithFixedFee @Inject constructor() : ExchangeRule {
 
     companion object {
-        const val FEE_PERCENT: Double = 0.07
+        const val FEE_PERCENT: Double = 0.007
     }
 
     override fun change(exchangeRequestModel: ExchangeRequestModel): ExchangeResultModel? {
@@ -62,7 +62,7 @@ class ExchangeWithFixedFeeAfterNFree @Inject constructor(
 ) : ExchangeRule {
 
     companion object {
-        const val FEE_PERCENT: Double = 0.07
+        const val FEE_PERCENT: Double = 0.007
         const val N = 5
         const val KEY = "fixed_fee_after_n_free"
     }
@@ -94,7 +94,7 @@ class ExchangeWithEveryNthFree @Inject constructor(
 ) : ExchangeRule {
 
     companion object {
-        const val FEE_PERCENT: Double = 0.07
+        const val FEE_PERCENT: Double = 0.007
         const val NTH = 10
         const val KEY = "with_every_nth_free"
     }
@@ -125,7 +125,7 @@ class ExchangeWithFixedFeeUpToNPriceFree @Inject constructor(
 ) : ExchangeRule {
 
     companion object {
-        const val FEE_PERCENT: Double = 0.07
+        const val FEE_PERCENT: Double = 0.007
         const val PRICE = 200
     }
 
