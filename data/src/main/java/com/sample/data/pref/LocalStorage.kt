@@ -1,4 +1,4 @@
-package com.sample.data
+package com.sample.data.pref
 
 import android.content.SharedPreferences
 import javax.inject.Inject
@@ -26,12 +26,20 @@ class LocalStorage
 
     private fun getBoolean(key: String): Boolean = sharedPreferences.getBoolean(key, false)
 
-    private fun putString(key: String, value: String) {
+    fun putString(key: String, value: String) {
         sharedPreferences.edit()
             .putString(key, value)
             .apply()
     }
 
-    private fun getString(key: String): String? = sharedPreferences.getString(key, null)
+    fun getString(key: String): String? = sharedPreferences.getString(key, null)
+
+    fun putDouble(key: String, value: Double) {
+        sharedPreferences.edit()
+            .putString(key, value.toString())
+            .apply()
+    }
+
+    fun getDouble(key: String): Double? = sharedPreferences.getString(key, null)?.toDouble()
 
 }
